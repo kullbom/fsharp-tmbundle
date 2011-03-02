@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>EXPR="$(cat | sed 's/\\/\\\\/g' | sed 's/\"/\\\"/g')" 
+
+export SHELL_NAME=${SHELL_NAME:="FSharp Interactive"}
+export SHELL_INTERPRETER=${SHELL_INTERPRETER:="fsi"}
+
+osascript &lt;&lt; END
+tell application "iTerm"
+    if (count (every session of every terminal)) = 0 then
+        make new terminal
+    end if
+    tell the first terminal
+        if not (exists session named "$SHELL_NAME") then
+            launch session "Default"
+            tell the current session
+                set name to "$SHELL_NAME"
+                write text "$SHELL_INTERPRETER"
+            end tell
+        end if
+        select session named "$SHELL_NAME"
+        tell session named "$SHELL_NAME"
+            write text "$EXPR" &amp; ";;"
+        end tell
+    end tell
+end tell
+END</string>
+	<key>fallbackInput</key>
+	<string>line</string>
+	<key>input</key>
+	<string>selection</string>
+	<key>keyEquivalent</key>
+	<string></string>
+	<key>name</key>
+	<string>Eval</string>
+	<key>output</key>
+	<string>showAsTooltip</string>
+	<key>scope</key>
+	<string>source.fsharp</string>
+	<key>uuid</key>
+	<string>521EBFBB-544B-41E0-9446-FE37307FB5DF</string>
+</dict>
+</plist>
